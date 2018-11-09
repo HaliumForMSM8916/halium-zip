@@ -39,6 +39,7 @@ function flash() {
 function copy() {
 	cp $IMAGE_DIR/rootfs.img $INSTALLDIR/
 	cp $IMAGE_DIR/system.img $INSTALLDIR/
+	cp $LOCATION/halium-boot.img $INSTALLDIR/
 }
 
 function prepare_zip () {
