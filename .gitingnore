@@ -1,0 +1,8 @@
+# Halium images
+system.img
+rootfs.img
+halium-boot.img
+hybris-boot.img
+
+# Possible zip installers
+*.zip
