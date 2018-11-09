@@ -1,0 +1,98 @@
+#!/bin/bash
+#
+# Halium installer script
+# =======================
+#
+# Copyright (C) 2017 JBBgameich
+# Copyright (C) 2017 TheWiseNerd
+#
+# License: GPLv3
+#
+# dependencies: qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img
+
+LOCATION="$(dirname "$(readlink -f "$0")")"
+export ROOTFS_RELEASE="none"
+
+function quiet ( ) {
+    cat > /dev/null
+}
+
+out=quiet
+
+# Include functions
+source $LOCATION/functions/misc.sh
+
+# parse options
+while [ -n "$1" ] ; do
+	case "$1" in
+	"-p")
+		shift
+		export ROOTFS_RELEASE="$1"
+		;;
+    "-v")
+        out="cat -"
+        ;;
+	*)
+		break
+		;;
+	esac
+	shift
+done
+
+# parse positional parameters
+if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
+	usage
+	exit
+fi
+
+export ROOTFS_TAR=$1
+export AND_IMAGE=$2
+if [ ! -f $ROOTFS_TAR ] || [ ! -f $AND_IMAGE ]; then
+	usage
+	exit
+fi
+
+# Check for missing dependencies
+if ! init_checks; then
+	exit
+fi
+
+export ROOTFS_DIR=$(mktemp -d .halium-install-rootfs.XXXXX)
+export IMAGE_DIR=$(mktemp -d .halium-install-imgs.XXXXX)
+
+# Logic that depends on the opts being parsed
+source $LOCATION/functions/distributions.sh
+source $LOCATION/functions/core.sh
+
+# Start installer
+echo "Debug: Chosen rootfs is $ROOTFS_TAR"
+echo "Debug: Chosen android image is $AND_IMAGE"
+echo "Debug: Chosen release is $ROOTFS_RELEASE"
+echo
+
+echo "I: Writing rootfs into mountable image"
+convert_rootfs $IMAGE_SIZE 2>&1 | $out
+
+echo "I: Writing android image into mountable image"
+convert_androidimage 2>&1 | $out
+
+echo "I: Running post installation tasks"
+post_install $ROOTFS_RELEASE
+
+echo "I: Unmounting images"
+unmount
+
+echo "I: Shrinking images"
+shrink_images
+
+echo "I: Pushing rootfs and android image to /data via ADB"
+if ! flash $ROOTFS_RELEASE; then
+	echo "Error: Couldn't copy the files to the device, is it connected?"
+fi
+
+echo "I: Cleaning up host"
+clean
+
+echo "I: Cleaning up device"
+clean_device
+
