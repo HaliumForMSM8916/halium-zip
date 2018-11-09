@@ -6,3 +6,7 @@ hybris-boot.img
 
 # Possible zip installers
 *.zip
+
+# Script created folders
+.halium-install-*
+.install*
