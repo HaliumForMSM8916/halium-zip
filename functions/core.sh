@@ -49,7 +49,8 @@ function prepare_zip () {
 }
 
 function make_zip () {
-	zip -r9 $FINAL_ZIP $INSTALLDIR/*
+	cd $INSTALLDIR
+	zip -r9 ../$FINAL_ZIP *
 }
 function clean() {
 	# Delete created files from last install
