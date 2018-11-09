@@ -1,17 +1,20 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Halium installer script
 # =======================
 #
 # Copyright (C) 2017 JBBgameich
 # Copyright (C) 2017 TheWiseNerd
+# Copyright (C) 2018 IkerST
 #
 # License: GPLv3
 #
-# dependencies: qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img
+# dependencies: qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img rpl
 
-LOCATION="$(dirname "$(readlink -f "$0")")"
+export LOCATION="$(dirname "$(readlink -f "$0")")"
 export ROOTFS_RELEASE="none"
+export DATE="$(date +"%d%m%Y")"
+export FINAL_ZIP=UbuntuTouch-Installer-Beta-"$DATE".zip
 
 function quiet ( ) {
     cat > /dev/null
@@ -47,6 +50,7 @@ fi
 
 export ROOTFS_TAR=$1
 export AND_IMAGE=$2
+export DEVICE=$3
 if [ ! -f $ROOTFS_TAR ] || [ ! -f $AND_IMAGE ]; then
 	usage
 	exit
@@ -59,6 +63,7 @@ fi
 
 export ROOTFS_DIR=$(mktemp -d .halium-install-rootfs.XXXXX)
 export IMAGE_DIR=$(mktemp -d .halium-install-imgs.XXXXX)
+export INSTALLDIR=$(mktemp -d .install.XXXXX)
 
 # Logic that depends on the opts being parsed
 source $LOCATION/functions/distributions.sh
@@ -85,14 +90,15 @@ unmount
 echo "I: Shrinking images"
 shrink_images
 
-echo "I: Pushing rootfs and android image to /data via ADB"
-if ! flash $ROOTFS_RELEASE; then
-	echo "Error: Couldn't copy the files to the device, is it connected?"
-fi
+echo "I: Copiyng images to install dir"
+copy
+
+echo "I: Preparing install dir"
+prepare_zip
+
+echo "I: Making zip"
+make_zip
 
 echo "I: Cleaning up host"
 clean
-
-echo "I: Cleaning up device"
-clean_device
-
+clean_install

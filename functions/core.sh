@@ -36,9 +36,27 @@ function flash() {
 	adb push $IMAGE_DIR/system.img /data/
 }
 
+function copy() {
+	cp $IMAGE_DIR/rootfs.img $INSTALLDIR/
+	cp $IMAGE_DIR/system.img $INSTALLDIR/
+}
+
+function prepare_zip () {
+	cp -R $LOCATION/Installer/META-INF $INSTALLDIR/
+	rpl "%date%" $DATE $INSTALLDIR/META-INF/com/google/android/updater-script
+	rpl "%device%" $DEVICE $INSTALLDIR/META-INF/com/google/android/updater-script
+}
+
+function make_zip () {
+	zip -r9 $FINAL_ZIP $INSTALLDIR/*
+}
 function clean() {
 	# Delete created files from last install
 	sudo rm $ROOTFS_DIR $IMAGE_DIR -rf
+}
+
+function clean_install() {
+	sudo rm -rf $INSTALLDIR
 }
 
 function clean_device() {

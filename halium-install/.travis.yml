@@ -1,6 +1,0 @@
-script:
-  - bash utils/standalone.sh
-
-after_success:
-  - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
-  - bash upload.sh bin/halium-install-standalone.sh
