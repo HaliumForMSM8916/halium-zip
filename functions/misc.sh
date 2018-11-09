@@ -34,7 +34,7 @@ function init_checks() {
 function usage() {
 	cat <<-EOF
 
-	Usage: $0 [-p POSTINSTALL] [-v] rootfs.tar[.gz] system.img
+	Usage: $0 [-p POSTINSTALL] [-v] rootfs.tar[.gz] system.img device-codename
 
 	Options:
 	    -p POSTINSTALL  run common post installation tasks for release.
