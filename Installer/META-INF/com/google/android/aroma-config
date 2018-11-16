@@ -109,24 +109,8 @@ splash(
 #  #-- Duration 2000ms / 2 seconds
     2000,
   
-  #-- <AROMA Resource Dir>/sample.png
-    "sample"
-);
-
-##
-# Show Animated Splash
-#
-anisplash(
-#  #-- Number of Loop
-    4,
-  
-  #-- Frame 1 [ Image, duration in millisecond ]. <AROMA Resource Dir>/splash/a[1..6].png
-    "splash/a1", 500,
-    "splash/a2", 30,
-    "splash/a3", 30,
-    "splash/a4", 30,
-    "splash/a5", 30,
-    "splash/a6", 30
+  #-- <AROMA Resource Dir>/splash.png
+    "splash"
 );
 
 #
