@@ -10,3 +10,4 @@ hybris-boot.img
 # Script created folders
 .halium-install-*
 .install*
+.simgdat*
