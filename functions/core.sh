@@ -47,6 +47,7 @@ function convert_simgdat() {
 	sudo umount mount/
 	img2simg data.img data-sparse.img
 	img2sdat -v 1 -p data data-sparse.img
+	brotli -9 data.new.dat
 	cd ../
 }
 
@@ -56,7 +57,7 @@ function copy_convert() {
 }
 
 function copy_dat() {
-	cp $SIMGDAT/data.new.dat $INSTALLDIR/
+	cp $SIMGDAT/data.new.dat.br $INSTALLDIR/
 	cp $SIMGDAT/data.patch.dat $INSTALLDIR/
 	cp $SIMGDAT/data.transfer.list $INSTALLDIR/
 	if [ -f halium-boot.img ]; then
