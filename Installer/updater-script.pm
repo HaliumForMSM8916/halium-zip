@@ -1,0 +1,36 @@
+ui_print("*********************************************");
+ui_print("*********************************************");
+ui_print("      ____  _                                ");
+ui_print("     |  _ \| | __ _ ___ _ __ ___   __ _      ");
+ui_print("     | |_) | |/ _` / __| '_ ` _ \ / _` |     ");
+ui_print("     |  __/| | (_| \__ \ | | | | | (_| |     ");
+ui_print("     |_|   |_|\__,_|___/_| |_| |_|\__,_|     ");
+ui_print("                                             ");
+ui_print("         __  __       _     _ _              ");
+ui_print("        |  \/  | ___ | |__ (_) | ___         ");
+ui_print("        | |\/| |/ _ \| '_ \| | |/ _ \        ");
+ui_print("        | |  | | (_) | |_) | | |  __/        ");
+ui_print("        |_|  |_|\___/|_.__/|_|_|\___|        ");
+ui_print("                                             ");
+ui_print("*********************************************");
+ui_print("**************** Halium  7.1 ****************");
+ui_print("*********** Welcome to UbuntuTouch **********");
+ui_print("*********************************************");
+ui_print(" Build Date      : %date%");
+ui_print(" Device          : %device%");
+ui_print(" Manufacturer    : Motorola");
+ui_print("*********************************************");
+ui_print("*********************************************");
+show_progress(0.750000, 0);
+ifelse(is_mounted("/data"), unmount("/data"));
+ui_print("Extracting rootfs...");
+package_extract_file("rootfs.img", "/data/rootfs.img") ||
+  abort("E1001: Failed to copy rootfs.");
+show_progress(0.020000, 10);
+package_extract_file("system.img", "/data/system.img") ||
+  abort("E1001: Failed to copy system.");
+unmount("/data");
+show_progress(0.050000, 5);
+package_extract_file("boot.img", "/dev/block/bootdevice/by-name/boot");
+show_progress(0.200000, 10);
+set_progress(1.000000);

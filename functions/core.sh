@@ -37,13 +37,21 @@ function flash() {
 }
 
 function copy() {
-	cp $IMAGE_DIR/rootfs.img $INSTALLDIR/
+	cp $IMAGE_DIR/rootfs.img $INSTALLDIR/s
 	cp $IMAGE_DIR/system.img $INSTALLDIR/
-	cp $LOCATION/halium-boot.img $INSTALLDIR/
+	if [ -f halium-boot.img ]; then
+		cp halium-boot.img $INSTALLDIR/boot.img
+	elif [ -f hybris-boot.img ]; then
+		cp hybris-boot.img $INSTALLDIR/boot.img
+	else
+		echo "No halium/hybris boot image found"
+	fi
 }
 
 function prepare_zip () {
-	cp -R $LOCATION/Installer/META-INF $INSTALLDIR/
+	mkdir -p $INSTALLDIR/META-INF/com/google/android
+	cp $LOCATION/Installer/updater-script.$ROOTFS_RELEASE $INSTALLDIR/META-INF/com/google/android/updater-script
+	cp $LOCATION/Installer/update-binary $INSTALLDIR/META-INF/com/google/android/update-binary
 	rpl "%date%" $DATE $INSTALLDIR/META-INF/com/google/android/updater-script
 	rpl "%device%" $DEVICE $INSTALLDIR/META-INF/com/google/android/updater-script
 }
