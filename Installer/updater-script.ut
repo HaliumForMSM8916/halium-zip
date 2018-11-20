@@ -25,7 +25,7 @@ show_progress(0.750000, 0);
 ifelse(is_mounted("/data"), unmount("/data"));
 ui_print("Extracting rootfs...");
 ui_print("Extracting data (with rootfs && system.img)...");
-block_image_update("/dev/block/bootdevice/by-name/data", package_extract_file("data.transfer.list"), "data.new.dat.br", "data.patch.dat") ||
+block_image_update("/dev/block/bootdevice/by-name/data", package_extract_file("data.transfer.list"), "data.new.dat", "data.patch.dat") ||
   abort("E1001: Failed to update data image.");
 show_progress(0.020000, 10);
 unmount("/data");
