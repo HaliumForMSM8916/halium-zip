@@ -36,9 +36,28 @@ function flash() {
 	adb push $IMAGE_DIR/system.img /data/
 }
 
-function copy() {
-	cp $IMAGE_DIR/rootfs.img $INSTALLDIR/
-	cp $IMAGE_DIR/system.img $INSTALLDIR/
+function convert_simgdat() {
+	cd $SIMGDAT
+	fallocate -l 5G data.img
+	mkfs.ext4 data.img
+	mkdir mount
+	sudo mount data.img mount/
+	mv system.img mount/
+	mv rootfs.img mount/
+	sudo umount mount/
+	img2simg data.img data-sparse.img
+	img2sdat -v 1 data-sparse.img
+}
+
+function copy_convert() {
+	cp $IMAGE_DIR/rootfs.img $SIMGDAT/
+	cp $IMAGE_DIR/system.img $SIMGDAT/
+}
+
+function copy_dat() {
+	cp $SIMGDAT/system.new.dat $INSTALLDIR/
+	cp $SIMGDAT/system.patch.dat $INSTALLDIR/
+	cp $SIMGDAT/system.transfer.list $INSTALLDIR/
 	if [ -f halium-boot.img ]; then
 		cp halium-boot.img $INSTALLDIR/boot.img
 	elif [ -f hybris-boot.img ]; then

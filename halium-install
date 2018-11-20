@@ -14,7 +14,6 @@
 export LOCATION="$(dirname "$(readlink -f "$0")")"
 export ROOTFS_RELEASE="none"
 export DATE="$(date +"%d%m%Y")"
-export FINAL_ZIP=UbuntuTouch-Installer-Beta-"$DATE".zip
 
 function quiet ( ) {
     cat > /dev/null
@@ -64,6 +63,8 @@ fi
 export ROOTFS_DIR=$(mktemp -d .halium-install-rootfs.XXXXX)
 export IMAGE_DIR=$(mktemp -d .halium-install-imgs.XXXXX)
 export INSTALLDIR=$(mktemp -d .install.XXXXX)
+export SIMGDAT=$(mktemp -d .simgdat.XXXXX)
+export FINAL_ZIP="$ROOTFS_RELEASE"-Installer-Beta-"$DATE".zip
 
 # Logic that depends on the opts being parsed
 source $LOCATION/functions/distributions.sh
@@ -90,8 +91,14 @@ unmount
 echo "I: Shrinking images"
 shrink_images
 
-echo "I: Copiyng images to install dir"
-copy
+echo "I: Copiyng images to convert dir"
+copy_convert
+
+echo "I: Creating sparse and dat files"
+convert_simgdat
+
+echo "I: Copiyng *.dat to install dir"
+copy_dat
 
 echo "I: Preparing install dir"
 prepare_zip

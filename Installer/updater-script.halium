@@ -17,12 +17,10 @@ ui_print("*********************************************");
 ui_print("*********************************************");
 show_progress(0.750000, 0);
 ifelse(is_mounted("/data"), unmount("/data"));
-ui_print("Extracting rootfs...");
-package_extract_file("rootfs.img", "/data/rootfs.img") ||
-  abort("E1001: Failed to copy rootfs.");
+ui_print("Extracting data (with rootfs && system.img)...");
+block_image_update("/dev/block/bootdevice/by-name/data", package_extract_file("data.transfer.list"), "data.new.dat.br", "data.patch.dat") ||
+  abort("E1001: Failed to update data image.");
 show_progress(0.020000, 10);
-package_extract_file("system.img", "/data/system.img") ||
-  abort("E1001: Failed to copy system.");
 unmount("/data");
 show_progress(0.050000, 5);
 package_extract_file("boot.img", "/dev/block/bootdevice/by-name/boot");
