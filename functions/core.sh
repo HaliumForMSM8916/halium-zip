@@ -46,7 +46,8 @@ function convert_simgdat() {
 	sudo mv rootfs.img mount/
 	sudo umount mount/
 	img2simg data.img data-sparse.img
-	img2sdat -v 1 data-sparse.img
+	img2sdat -v 1 -p data data-sparse.img
+	cd ../
 }
 
 function copy_convert() {
@@ -55,9 +56,9 @@ function copy_convert() {
 }
 
 function copy_dat() {
-	cp $SIMGDAT/system.new.dat $INSTALLDIR/
-	cp $SIMGDAT/system.patch.dat $INSTALLDIR/
-	cp $SIMGDAT/system.transfer.list $INSTALLDIR/
+	cp $SIMGDAT/data.new.dat $INSTALLDIR/
+	cp $SIMGDAT/data.patch.dat $INSTALLDIR/
+	cp $SIMGDAT/data.transfer.list $INSTALLDIR/
 	if [ -f halium-boot.img ]; then
 		cp halium-boot.img $INSTALLDIR/boot.img
 	elif [ -f hybris-boot.img ]; then
