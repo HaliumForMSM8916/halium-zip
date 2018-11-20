@@ -42,8 +42,8 @@ function convert_simgdat() {
 	mkfs.ext4 data.img
 	mkdir mount
 	sudo mount data.img mount/
-	mv system.img mount/
-	mv rootfs.img mount/
+	sudo mv system.img mount/
+	sudo mv rootfs.img mount/
 	sudo umount mount/
 	img2simg data.img data-sparse.img
 	img2sdat -v 1 data-sparse.img
