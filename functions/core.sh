@@ -37,7 +37,7 @@ function flash() {
 }
 
 function copy() {
-	cp $IMAGE_DIR/rootfs.img $INSTALLDIR/s
+	cp $IMAGE_DIR/rootfs.img $INSTALLDIR/
 	cp $IMAGE_DIR/system.img $INSTALLDIR/
 	if [ -f halium-boot.img ]; then
 		cp halium-boot.img $INSTALLDIR/boot.img
@@ -63,9 +63,6 @@ function make_zip () {
 function clean() {
 	# Delete created files from last install
 	sudo rm $ROOTFS_DIR $IMAGE_DIR -rf
-}
-
-function clean_install() {
 	sudo rm -rf $INSTALLDIR
 }
 

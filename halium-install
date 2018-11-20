@@ -101,4 +101,3 @@ make_zip
 
 echo "I: Cleaning up host"
 clean
-clean_install
