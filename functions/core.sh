@@ -44,6 +44,7 @@ function copy() {
 
 function prepare_zip () {
 	cp -R $LOCATION/Installer/META-INF $INSTALLDIR/
+	cp $LOCATION/sources/images/$ROOTFS_RELEASE.png $INSTALLDIR/META-INF/com/google/android/aroma/splash.png
 	rpl "%date%" $DATE $INSTALLDIR/META-INF/com/google/android/updater-script
 	rpl "%device%" $DEVICE $INSTALLDIR/META-INF/com/google/android/updater-script
 }
