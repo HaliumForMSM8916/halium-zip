@@ -5,16 +5,18 @@
 #
 # Copyright (C) 2017 JBBgameich
 # Copyright (C) 2017 TheWiseNerd
+# Copyright (C) 2018 IkerST
 #
 # License: GPLv3
 #
-# dependencies: qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img
+# dependencies: qemu binfmt-support qemu-user-static e2fsprogs sudo simg2img rpl
 
 LOCATION="$(dirname "$(readlink -f "$0")")"
 
 # Defaults
 export ROOTFS_RELEASE="none"
 export INSTALL_MODE="img"
+export DATE="$(date +"%d%m%Y")"
 
 function quiet () {
     cat > /dev/null
@@ -62,6 +64,8 @@ while [ -n "$1" ] ; do
 	shift
 done
 
+export FINAL_ZIP="$ROOTFS_RELEASE"-Installer-Beta-"$DATE".zip
+
 # parse positional parameters
 if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
 	usage
@@ -70,7 +74,8 @@ fi
 
 export ROOTFS_TAR=$1
 export AND_IMAGE=$2
-if [ ! -f $ROOTFS_TAR ] || [ ! -f $AND_IMAGE ]; then
+export DEVICE=$3
+if [ ! -f $ROOTFS_TAR ] || [ ! -f $AND_IMAGE ] || [ -z $DEVICE ]; then
 	usage
 	exit
 fi
@@ -82,6 +87,7 @@ fi
 
 export ROOTFS_DIR=$(mktemp -d .halium-install-rootfs.XXXXX)
 export IMAGE_DIR=$(mktemp -d .halium-install-imgs.XXXXX)
+export INSTALLDIR=$(mktemp -d .install.XXXXX)
 
 # Logic that depends on the opts being parsed
 source $LOCATION/functions/distributions.sh
@@ -123,6 +129,7 @@ fi
 echo "I: Shrinking images"
 shrink_images
 
+# TODO: Check this
 case "$INSTALL_MODE" in
 "img")
 	echo "I: Pushing rootfs and android image to /data via ADB"
@@ -138,9 +145,14 @@ case "$INSTALL_MODE" in
 	;;
 esac
 
+echo "I: Copiyng images to install dir"
+copy
+
+echo "I: Preparing install dir"
+prepare_zip
+
+echo "I: Making zip"
+make_zip
+
 echo "I: Cleaning up host"
 clean
-
-echo "I: Cleaning up device"
-clean_device
-

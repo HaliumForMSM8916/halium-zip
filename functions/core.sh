@@ -44,6 +44,31 @@ function flash_img() {
 	adb push $IMAGE_DIR/system.img /data/
 }
 
+function copy() {
+	cp $IMAGE_DIR/rootfs.img $INSTALLDIR/
+	cp $IMAGE_DIR/system.img $INSTALLDIR/
+	if [ -f halium-boot.img ]; then
+		cp halium-boot.img $INSTALLDIR/boot.img
+	elif [ -f hybris-boot.img ]; then
+		cp hybris-boot.img $INSTALLDIR/boot.img
+	else
+		echo "No halium/hybris boot image found"
+	fi
+}
+
+function prepare_zip () {
+	mkdir -p $INSTALLDIR/META-INF/com/google/android
+	cp $LOCATION/Installer/updater-script.$ROOTFS_RELEASE $INSTALLDIR/META-INF/com/google/android/updater-script
+	cp $LOCATION/Installer/update-binary $INSTALLDIR/META-INF/com/google/android/update-binary
+	rpl "%date%" $DATE $INSTALLDIR/META-INF/com/google/android/updater-script
+	rpl "%device%" $DEVICE $INSTALLDIR/META-INF/com/google/android/updater-script
+}
+
+function make_zip () {
+	cd $INSTALLDIR
+	zip -r9 ../$FINAL_ZIP *
+}
+
 function flash_dir() {
 	adb push $ROOTFS_DIR/* /data/halium-rootfs/
 }
@@ -51,6 +76,7 @@ function flash_dir() {
 function clean() {
 	# Delete created files from last install
 	sudo rm $ROOTFS_DIR $IMAGE_DIR -rf
+	sudo rm -rf $INSTALLDIR
 }
 
 function clean_device() {
