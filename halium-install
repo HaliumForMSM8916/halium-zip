@@ -132,7 +132,7 @@ shrink_images
 case "$INSTALL_MODE" in
 "img")
 	echo "I: Copiyng images to install dir"
-	copy_img $IMAGE_SIZE 2>&1 | $out
+	copy_img 2>&1 | $out
 	;;
 "dir")
 	echo "I: Copiyng dir to install dir"

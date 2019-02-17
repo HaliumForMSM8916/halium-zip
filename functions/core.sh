@@ -44,7 +44,7 @@ function flash_img() {
 	adb push $IMAGE_DIR/system.img /data/
 }
 
-function copy_image() {
+function copy_img() {
 	cp $IMAGE_DIR/rootfs.img $INSTALLDIR/
 	cp $IMAGE_DIR/system.img $INSTALLDIR/
 	if [ -f halium-boot.img ]; then
