@@ -129,27 +129,19 @@ fi
 echo "I: Shrinking images"
 shrink_images
 
-# TODO: Check this
 case "$INSTALL_MODE" in
 "img")
-	echo "I: Pushing rootfs and android image to /data via ADB"
-	if ! flash_img $ROOTFS_RELEASE; then
-		echo "Error: Couldn't copy the files to the device, is it connected?"
-	fi
+	echo "I: Copiyng images to install dir"
+	copy_img $IMAGE_SIZE 2>&1 | $out
 	;;
 "dir")
-	echo "I: Pushing rootfs and android image to /data via ADB"
-	if ! flash_dir $ROOTFS_RELEASE; then
-		echo "Error: Couldn't copy the files to the device, is it connected?"
-	fi
+	echo "I: Copiyng dir to install dir"
+	copy_dir 2>&1 | $out
 	;;
 esac
 
-echo "I: Copiyng images to install dir"
-copy
-
 echo "I: Preparing install dir"
-prepare_zip
+prepare_install_script $ROOTFS_RELEASE $INSTALL_MODE 2>&1 | $out
 
 echo "I: Making zip"
 make_zip

@@ -44,7 +44,7 @@ function flash_img() {
 	adb push $IMAGE_DIR/system.img /data/
 }
 
-function copy() {
+function copy_image() {
 	cp $IMAGE_DIR/rootfs.img $INSTALLDIR/
 	cp $IMAGE_DIR/system.img $INSTALLDIR/
 	if [ -f halium-boot.img ]; then
@@ -53,12 +53,49 @@ function copy() {
 		cp hybris-boot.img $INSTALLDIR/boot.img
 	else
 		echo "No halium/hybris boot image found"
+		exit 1
 	fi
 }
 
-function prepare_zip () {
+function copy_dir() {
+	mkdir -p $INSTALLDIR/halium-rootfs/
+	cp -r $ROOTFS_DIR/* $INSTALLDIR/halium-rootfs/
+	if [ -f halium-boot.img ]; then
+		cp halium-boot.img $INSTALLDIR/boot.img
+	elif [ -f hybris-boot.img ]; then
+		cp hybris-boot.img $INSTALLDIR/boot.img
+	else
+		echo "No halium/hybris boot image found"
+		exit 1
+	fi
+}
+
+function prepare_install_script() {
 	mkdir -p $INSTALLDIR/META-INF/com/google/android
-	cp $LOCATION/Installer/updater-script.$ROOTFS_RELEASE $INSTALLDIR/META-INF/com/google/android/updater-script
+	case "$1" in
+	halium)
+		cat $LOCATION/Installer/headers/HAL >> $INSTALLDIR/META-INF/com/google/android/updater-script
+		;;
+	debian-pm | debian-pm-caf | pm | neon)
+		cat $LOCATION/Installer/headers/PM >> $INSTALLDIR/META-INF/com/google/android/updater-script
+		;;
+	ut)
+		cat $LOCATION/Installer/headers/UT >> $INSTALLDIR/META-INF/com/google/android/updater-script
+		;;
+	esac
+
+	cat $LOCATION/Installer/headers/common >> $INSTALLDIR/META-INF/com/google/android/updater-script
+
+	case "$2" in
+	img)
+		cat $LOCATION/Installer/install_img >> $INSTALLDIR/META-INF/com/google/android/updater-script
+		;;
+	dir)
+		cat $LOCATION/Installer/install_dir >> $INSTALLDIR/META-INF/com/google/android/updater-script
+	esac
+}
+
+function prepare_zip() {
 	cp $LOCATION/Installer/update-binary $INSTALLDIR/META-INF/com/google/android/update-binary
 	rpl "%date%" $DATE $INSTALLDIR/META-INF/com/google/android/updater-script
 	rpl "%device%" $DEVICE $INSTALLDIR/META-INF/com/google/android/updater-script
