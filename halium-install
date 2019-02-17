@@ -17,6 +17,7 @@ LOCATION="$(dirname "$(readlink -f "$0")")"
 export ROOTFS_RELEASE="none"
 export INSTALL_MODE="img"
 export DATE="$(date +"%d%m%Y")"
+export NON_INTERACTIVE="false"
 
 function quiet () {
     cat > /dev/null
@@ -53,6 +54,9 @@ while [ -n "$1" ] ; do
 			exit 1
 			;;
 		esac
+		;;
+	"-n" | "--non-interactive" )
+		export NON_INTERACTIVE="true"
 		;;
 	"-v")
 		out="cat -"
@@ -114,7 +118,7 @@ echo "I: Writing android image into mountable image"
 convert_androidimage 2>&1 | $out
 
 echo "I: Running post installation tasks"
-post_install $ROOTFS_RELEASE
+post_install $ROOTFS_RELEASE $NON_INTERACTIVE
 
 if [ "$INSTALL_MODE" = "dir" ]; then
 	echo "I: Injecting android image into rootfs"
