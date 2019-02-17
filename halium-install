@@ -64,7 +64,7 @@ while [ -n "$1" ] ; do
 	shift
 done
 
-export FINAL_ZIP="$ROOTFS_RELEASE"-Installer-Beta-"$DATE".zip
+export FINAL_ZIP="$ROOTFS_RELEASE"-Installer-${INSTALL_MODE}_mode-Beta-"$DATE".zip
 
 # parse positional parameters
 if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
