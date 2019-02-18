@@ -39,6 +39,31 @@ function chroot_run() {
 	sudo DEBIAN_FRONTEND=noninteractive LANG=C RUNLEVEL=1 chroot $ROOTFS_DIR /bin/bash -c "$@" || return 1
 }
 
+function copy_ssh_key_root() {
+	if $DO_COPY_SSH_KEY ; then
+		D=$ROOTFS_DIR/root/.ssh
+		echo "I: Copying ssh key to the user 'root'"
+
+		sudo mkdir $D
+		sudo tee -a $D/authorized_keys < $SSH_KEY >/dev/null
+		sudo chmod 0700 $D
+		sudo chmod 0600 $D/authorized_keys
+	fi
+}
+
+function copy_ssh_key_phablet() {
+	if $DO_COPY_SSH_KEY ; then
+		D=$ROOTFS_DIR/home/phablet/.ssh
+		echo "I: Copying ssh key to the user 'phablet'"
+
+		sudo mkdir $D
+		sudo tee -a $D/authorized_keys < $SSH_KEY >/dev/null
+		sudo chown -R 32011:32011 $D
+		sudo chmod 0700 $D
+		sudo chmod 0600 $D/authorized_keys
+	fi
+}
+
 function post_install() {
 	if [ "$1" == "none" ]; then
 		return
@@ -59,9 +84,11 @@ function post_install() {
 	case "$1" in
 	halium | debian-pm | reference)
 		setup_passwd root $NON_INTERACTIVE
+		copy_ssh_key_root
 
 		if chroot_run "id -u phablet" >/dev/null 2>&1; then
 			setup_passwd phablet $NON_INTERACTIVE
+			copy_ssh_key_phablet
 		fi
 
 		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
@@ -69,9 +96,11 @@ function post_install() {
 		;;
 	debian-pm-caf)
 		setup_passwd root $NON_INTERACTIVE
+		copy_ssh_key_root
 
 		if chroot_run "id -u phablet" >/dev/null 2>&1; then
 			setup_passwd phablet $NON_INTERACTIVE
+			copy_ssh_key_phablet
 		fi
 
 		sudo rm -f $ROOTFS_DIR/etc/dropbear/dropbear_{dss,ecdsa,rsa}_host_key
@@ -84,7 +113,9 @@ function post_install() {
 		;;
 	pm | neon)
 		setup_passwd root $NON_INTERACTIVE
+		copy_ssh_key_root
 		setup_passwd phablet $NON_INTERACTIVE
+		copy_ssh_key_phablet
 
 		# cant source /etc/environment
 		# LD_LIBRARY_ ; QML2_IMPORT_ derps
@@ -104,6 +135,7 @@ function post_install() {
 		echo "[done]"
 
 		setup_passwd phablet $NON_INTERACTIVE
+		copy_ssh_key_phablet
 
 		sudo mkdir -p $ROOTFS_DIR/android/firmware
 		sudo mkdir -p $ROOTFS_DIR/android/persist

@@ -19,6 +19,8 @@ export INSTALL_MODE="img"
 export DATE="$(date +"%d%m%Y")"
 export NON_INTERACTIVE="false"
 export ADD_UDEV="false"
+export DO_COPY_SSH_KEY=false
+export SSH_KEY=~/.ssh/id_rsa.pub
 
 function quiet () {
     cat > /dev/null
@@ -63,6 +65,9 @@ while [ -n "$1" ] ; do
 		;;
 	"-n" | "--non-interactive" )
 		export NON_INTERACTIVE="true"
+		;;
+	"-i")
+		DO_COPY_SSH_KEY=true
 		;;
 	"-v")
 		out="cat -"

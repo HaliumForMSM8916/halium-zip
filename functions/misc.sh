@@ -34,7 +34,7 @@ function init_checks() {
 function usage() {
 	cat <<-EOF
 
-	Usage: $0 [-p POSTINSTALL] [-u] [-n] [-v] rootfs.tar[.gz] system.img halium/hybris-boot.img device-codename
+	Usage: $0 [-p POSTINSTALL] [-u] [-n] [-i] [-v] rootfs.tar[.gz] system.img halium/hybris-boot.img device-codename
 
 	Options:
 	    -p POSTINSTALL  run common post installation tasks for release.
@@ -47,6 +47,10 @@ function usage() {
 
 	    -n              non-interative mode, does not ask for password setup, uses
 	                    123456789 instead
+
+	    -i              copy your ssh public key into the image for password
+	                    less login (depending on POSTINSTALL selection for user
+	                    root or phablet or both)
 
 	Positional arguments:
 	    rootfs.tar[.gz]
