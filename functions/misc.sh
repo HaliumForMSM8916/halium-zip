@@ -34,7 +34,7 @@ function init_checks() {
 function usage() {
 	cat <<-EOF
 
-	Usage: $0 [-p POSTINSTALL] [-v] rootfs.tar[.gz] system.img
+	Usage: $0 [-p POSTINSTALL] [-n] [-v] rootfs.tar[.gz] system.img device-codename
 
 	Options:
 	    -p POSTINSTALL  run common post installation tasks for release.
@@ -43,10 +43,15 @@ function usage() {
 
 	    -v              verbose output.
 
+	    -n              non-interative mode, does not ask for password setup, uses
+	                    123456789 instead
+
 	Positional arguments:
 	    rootfs.tar[.gz]
 	    system.img
 
+	Also halium/hybris-boot.img needs to be on current folder
+	
 	EOF
 }
 

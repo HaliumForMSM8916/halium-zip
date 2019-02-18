@@ -1,11 +1,19 @@
-show_progress(0.750000, 0);
-ifelse(is_mounted("/data"), ui_print("Data is mounted"), mount("/data"));
-ui_print("Extracting rootfs...");
-package_extract_dir("halium-rootfs", "/data/halium-rootfs/") ||
-  abort("E1001: Failed to copy rootfs.");
-show_progress(0.020000, 10);
-unmount("/data");
-show_progress(0.050000, 5);
-package_extract_file("boot.img", "/dev/block/bootdevice/by-name/boot");
-show_progress(0.200000, 10);
-set_progress(1.000000);
+echo "show_progress(0.750000, 0)" > "$OUTFD";
+if [ mountpoint -q /data ]; then
+  echo "Data is mounted"
+else
+  echo "Mounting data"
+  mount /data
+fi
+echo "Extracting rootfs...";
+(unzip -o $ZIP halium-rootfs.tar -d /tmp  && \
+tar -xvf halium-rootfs.tar -C /data/ ) || \
+(echo "Failed to copy rootfs." && exit 1);
+echo "show_progress(0.020000, 10);" > "$OUTFD";
+umount /data;
+echo "show_progress(0.050000, 5)" > "$OUTFD";
+echo "Flashing Boot...";
+unzip -o $ZIP boot.img -d /tmp;
+dd if=/tmp/boot.img of=/dev/block/bootdevice/by-name/boot || \
+(echo "Failed to flash boot." && exit 1);
+echo "set_progress(1.000000)" > "$OUTFD";

@@ -58,8 +58,9 @@ function copy_img() {
 }
 
 function copy_dir() {
-	mkdir -p $INSTALLDIR/halium-rootfs/
-	cp -r $ROOTFS_DIR/* $INSTALLDIR/halium-rootfs/
+	mkdir -p $ROOTFS_DIR/halium-rootfs/
+	mv $ROOTFS_DIR/* $ROOTFS_DIR/halium-rootfs/
+	tar -cf $ROOTFS_DIR/halium-rootfs $INSTALLDIR/halium-rootfs.tar
 	if [ -f halium-boot.img ]; then
 		cp halium-boot.img $INSTALLDIR/boot.img
 	elif [ -f hybris-boot.img ]; then
@@ -74,31 +75,31 @@ function prepare_install_script() {
 	mkdir -p $INSTALLDIR/META-INF/com/google/android
 	case "$1" in
 	halium)
-		cat $LOCATION/Installer/headers/HAL >> $INSTALLDIR/META-INF/com/google/android/updater-script
+		cat $LOCATION/Installer/headers/HAL >> $INSTALLDIR/META-INF/com/google/android/update-binary
 		;;
 	debian-pm | debian-pm-caf | pm | neon)
-		cat $LOCATION/Installer/headers/PM >> $INSTALLDIR/META-INF/com/google/android/updater-script
+		cat $LOCATION/Installer/headers/PM >> $INSTALLDIR/META-INF/com/google/android/update-binary
 		;;
 	ut)
-		cat $LOCATION/Installer/headers/UT >> $INSTALLDIR/META-INF/com/google/android/updater-script
+		cat $LOCATION/Installer/headers/UT >> $INSTALLDIR/META-INF/com/google/android/update-binary
 		;;
 	esac
 
-	cat $LOCATION/Installer/headers/common >> $INSTALLDIR/META-INF/com/google/android/updater-script
+	cat $LOCATION/Installer/headers/common >> $INSTALLDIR/META-INF/com/google/android/update-binary
 
 	case "$2" in
 	img)
-		cat $LOCATION/Installer/install_img >> $INSTALLDIR/META-INF/com/google/android/updater-script
+		cat $LOCATION/Installer/install_img >> $INSTALLDIR/META-INF/com/google/android/update-binary
 		;;
 	dir)
-		cat $LOCATION/Installer/install_dir >> $INSTALLDIR/META-INF/com/google/android/updater-script
+		cat $LOCATION/Installer/install_dir >> $INSTALLDIR/META-INF/com/google/android/update-binary
 	esac
 }
 
 function prepare_zip() {
-	cp $LOCATION/Installer/update-binary $INSTALLDIR/META-INF/com/google/android/update-binary
-	rpl "%date%" $DATE $INSTALLDIR/META-INF/com/google/android/updater-script
-	rpl "%device%" $DEVICE $INSTALLDIR/META-INF/com/google/android/updater-script
+	cp $LOCATION/Installer/updater-script $INSTALLDIR/META-INF/com/google/android/updater-script
+	rpl "%date%" $DATE $INSTALLDIR/META-INF/com/google/android/update-binary
+	rpl "%device%" $DEVICE $INSTALLDIR/META-INF/com/google/android/update-binary
 }
 
 function make_zip () {

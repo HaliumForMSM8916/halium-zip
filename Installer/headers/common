@@ -1,5 +1,6 @@
-ui_print(" Build Date      : %date%");
-ui_print(" Device          : %device%");
-ui_print(" Manufacturer    : Motorola");
-ui_print("*********************************************");
-ui_print("*********************************************");
+echo " Build Date      : %date%";
+echo " Device          : %device%";
+echo "*********************************************";
+echo "*********************************************";
+export OUTFD="/proc/self/fd/$2"
+export ZIP="$3"
