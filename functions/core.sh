@@ -94,12 +94,9 @@ function prepare_install_script() {
 	dir)
 		cat $LOCATION/Installer/install_dir >> $INSTALLDIR/META-INF/com/google/android/update-binary
 	esac
-}
-
-function prepare_zip() {
 	cp $LOCATION/Installer/updater-script $INSTALLDIR/META-INF/com/google/android/updater-script
 	rpl "%date%" $DATE $INSTALLDIR/META-INF/com/google/android/update-binary
-	rpl "%device%" $DEVICE $INSTALLDIR/META-INF/com/google/android/update-binary
+	rpl "%device%" $DEVICE $INSTALLDIR/META-INF/com/google/android/update-binar
 }
 
 function make_zip () {
