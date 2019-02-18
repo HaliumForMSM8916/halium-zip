@@ -1,0 +1,5 @@
+# Halium files
+*.img
+*.zip
+.halium-install*
+.install*
