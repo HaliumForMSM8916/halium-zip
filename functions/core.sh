@@ -47,28 +47,14 @@ function flash_img() {
 function copy_img() {
 	cp $IMAGE_DIR/rootfs.img $INSTALLDIR/
 	cp $IMAGE_DIR/system.img $INSTALLDIR/
-	if [ -f halium-boot.img ]; then
-		cp halium-boot.img $INSTALLDIR/boot.img
-	elif [ -f hybris-boot.img ]; then
-		cp hybris-boot.img $INSTALLDIR/boot.img
-	else
-		echo "No halium/hybris boot image found"
-		exit 1
-	fi
+	cp $BOOT_IMG $INSTALLDIR/boot.img
 }
 
 function copy_dir() {
 	mkdir -p $ROOTFS_DIR/halium-rootfs/
 	mv $ROOTFS_DIR/* $ROOTFS_DIR/halium-rootfs/
 	tar -cf $ROOTFS_DIR/halium-rootfs $INSTALLDIR/halium-rootfs.tar
-	if [ -f halium-boot.img ]; then
-		cp halium-boot.img $INSTALLDIR/boot.img
-	elif [ -f hybris-boot.img ]; then
-		cp hybris-boot.img $INSTALLDIR/boot.img
-	else
-		echo "No halium/hybris boot image found"
-		exit 1
-	fi
+	cp $BOOT_IMG $INSTALLDIR/boot.img
 }
 
 function prepare_install_script() {

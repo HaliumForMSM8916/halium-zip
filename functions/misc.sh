@@ -34,7 +34,7 @@ function init_checks() {
 function usage() {
 	cat <<-EOF
 
-	Usage: $0 [-p POSTINSTALL] [-n] [-v] rootfs.tar[.gz] system.img device-codename
+	Usage: $0 [-p POSTINSTALL] [-n] [-v] rootfs.tar[.gz] system.img halium/hybris-boot.img device-codename
 
 	Options:
 	    -p POSTINSTALL  run common post installation tasks for release.
@@ -49,8 +49,6 @@ function usage() {
 	Positional arguments:
 	    rootfs.tar[.gz]
 	    system.img
-
-	Also halium/hybris-boot.img needs to be on current folder
 	
 	EOF
 }

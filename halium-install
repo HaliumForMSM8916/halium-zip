@@ -71,15 +71,16 @@ done
 export FINAL_ZIP="$ROOTFS_RELEASE"-Installer-${INSTALL_MODE}_mode-Beta-"$DATE".zip
 
 # parse positional parameters
-if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
+if [ "$#" -lt 3 ] || [ "$#" -gt 4 ]; then
 	usage
 	exit
 fi
 
 export ROOTFS_TAR=$1
 export AND_IMAGE=$2
-export DEVICE=$3
-if [ ! -f $ROOTFS_TAR ] || [ ! -f $AND_IMAGE ] || [ -z $DEVICE ]; then
+export BOOT_IMG=$3
+export DEVICE=$4
+if [ ! -f $ROOTFS_TAR ] || [ ! -f $AND_IMAGE ] || [ ! -f $BOOT_IMG ] || [ -z $DEVICE ]; then
 	usage
 	exit
 fi
