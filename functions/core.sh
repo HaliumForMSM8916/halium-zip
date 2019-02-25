@@ -14,6 +14,12 @@ function convert_rootfs_to_img() {
 	sudo tar -xf $ROOTFS_TAR -C $ROOTFS_DIR
 }
 
+function add_udev() {
+	sudo cp $FILE_UDEV $ROOTFS_DIR/etc/udev/rules.d/
+	sudo chown root:root $ROOTFS_DIR/etc/udev/rules.d/$(basename $FILE_UDEV)
+	sudo chmod 644 $ROOTFS_DIR/etc/udev/rules.d/$(basename $FILE_UDEV)
+}
+
 function convert_rootfs_to_dir() {
 	sudo tar -xf $ROOTFS_TAR -C $ROOTFS_DIR
 }

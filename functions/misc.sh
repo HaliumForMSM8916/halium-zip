@@ -34,7 +34,7 @@ function init_checks() {
 function usage() {
 	cat <<-EOF
 
-	Usage: $0 [-p POSTINSTALL] [-n] [-v] rootfs.tar[.gz] system.img halium/hybris-boot.img device-codename
+	Usage: $0 [-p POSTINSTALL] [-u] [-n] [-v] rootfs.tar[.gz] system.img halium/hybris-boot.img device-codename
 
 	Options:
 	    -p POSTINSTALL  run common post installation tasks for release.
@@ -42,6 +42,8 @@ function usage() {
 	                    default: none
 
 	    -v              verbose output.
+
+	    -u UDEV_RULES   add udev rules inside the rootfs
 
 	    -n              non-interative mode, does not ask for password setup, uses
 	                    123456789 instead
