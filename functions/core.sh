@@ -59,30 +59,31 @@ function copy_dir() {
 
 function prepare_install_script() {
 	mkdir -p $INSTALLDIR/META-INF/com/google/android
+	cat $LOCATION/Installer/l1-common >> $INSTALLDIR/META-INF/com/google/android/update-binary
 	case "$1" in
-	halium)
-		cat $LOCATION/Installer/headers/HAL >> $INSTALLDIR/META-INF/com/google/android/update-binary
+	"reference" | "halium")
+		cat $LOCATION/Installer/l2-distro/HAL >> $INSTALLDIR/META-INF/com/google/android/update-binary
 		;;
-	debian-pm | debian-pm-caf | pm | neon)
-		cat $LOCATION/Installer/headers/PM >> $INSTALLDIR/META-INF/com/google/android/update-binary
+	"debian-pm" | "debian-pm-caf" | "pm" | "neon")
+		cat $LOCATION/Installer/l2-distro/PM >> $INSTALLDIR/META-INF/com/google/android/update-binary
 		;;
-	ut)
-		cat $LOCATION/Installer/headers/UT >> $INSTALLDIR/META-INF/com/google/android/update-binary
+	"ut")
+		cat $LOCATION/Installer/l2-distro/UT >> $INSTALLDIR/META-INF/com/google/android/update-binary
 		;;
 	esac
 
-	cat $LOCATION/Installer/headers/common >> $INSTALLDIR/META-INF/com/google/android/update-binary
+	cat $LOCATION/Installer/l3-common >> $INSTALLDIR/META-INF/com/google/android/update-binary
 
 	case "$2" in
-	img)
-		cat $LOCATION/Installer/install_img >> $INSTALLDIR/META-INF/com/google/android/update-binary
+	"img")
+		cat $LOCATION/Installer/l4-install_img >> $INSTALLDIR/META-INF/com/google/android/update-binary
 		;;
-	dir)
-		cat $LOCATION/Installer/install_dir >> $INSTALLDIR/META-INF/com/google/android/update-binary
+	"dir")
+		cat $LOCATION/Installer/l4-install_dir >> $INSTALLDIR/META-INF/com/google/android/update-binary
 	esac
 	cp $LOCATION/Installer/updater-script $INSTALLDIR/META-INF/com/google/android/updater-script
 	rpl "%date%" $DATE $INSTALLDIR/META-INF/com/google/android/update-binary
-	rpl "%device%" $DEVICE $INSTALLDIR/META-INF/com/google/android/update-binar
+	rpl "%device%" $DEVICE $INSTALLDIR/META-INF/com/google/android/update-binary
 }
 
 function make_zip () {

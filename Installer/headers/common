@@ -1,6 +1,0 @@
-echo " Build Date      : %date%";
-echo " Device          : %device%";
-echo "*********************************************";
-echo "*********************************************";
-export OUTFD="/proc/self/fd/$2"
-export ZIP="$3"

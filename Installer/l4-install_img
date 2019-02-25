@@ -1,0 +1,23 @@
+if [ mountpoint -q /data ]; then
+  ui_print "Data is mounted"
+else
+  ui_print "Mounting data"
+  mount /data
+fi
+ui_print "Extracting rootfs...";
+(show_progress 0.850000 285)&;
+(unzip -o $ZIPFILE rootfs.img -d /data/ ) || \
+(abort "Failed to copy rootfs.");
+(show_progress 0.850000 0)&;
+ui_print "Extracting system...";
+(show_progress 0.970000 40)&;
+(unzip -o $ZIPFILE system.img -d /data/ ) || \
+(abort "Failed to copy system.");
+(show_progress 0.970000 0)&;
+umount /data;
+ui_print "Flashing Boot...";
+(show_progress 1.000000 3)&;
+unzip -o $ZIPFILE boot.img -d /tmp;
+dd if=/tmp/boot.img of=/dev/block/bootdevice/by-name/boot || \
+(abort "Failed to flash boot.");
+(show_progress 1.000000 0)&;
