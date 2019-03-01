@@ -5,15 +5,15 @@ else
   mount /data
 fi
 ui_print "Extracting rootfs...";
-(show_progress 0.970000 285)&;
+show_progress 0.970000 285;
 (unzip -o $ZIPFILE halium-rootfs.tar -d /tmp  && \
 tar -xvf halium-rootfs.tar -C /data/ ) || \
 (abort "Failed to copy rootfs.");
-(show_progress 0.970000 0)&;
+show_progress 0.970000 0;
 umount /data;
 ui_print "Flashing Boot...";
-(show_progress 1.000000 3)&;
+show_progress 1.000000 3;
 unzip -o $ZIPFILE boot.img -d /tmp;
 dd if=/tmp/boot.img of=/dev/block/bootdevice/by-name/boot || \
 (abort "Failed to flash boot.");
-(show_progress 1.000000 0)&;
+show_progress 1.000000 0;
